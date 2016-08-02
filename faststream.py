@@ -20,9 +20,8 @@ ariaProcess = subprocess.Popen(
     stdout=sys.stdout,
     stderr=sys.stderr)
 
-
-for x in range(5, 0, -1):
-    time.sleep(1)
+# Let it load a bit
+time.sleep(5)
 
 vlcProcess = subprocess.Popen(["vlc", videoPath])
 
@@ -32,9 +31,9 @@ print("Terminating aria2c.")
 ariaProcess.terminate()
 
 while True:
-    res = input("Do you want to move the video to the trash? [y/n] ")
+    res = input("Do you want to move the video to the trash? (default 'y') [y/n] ")
 
-    if (res == "y"):
+    if (res == "y" or res == ""):
         send2trash(videoPath)
         sys.exit(0)
     elif (res == "n"):
