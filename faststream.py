@@ -2,6 +2,7 @@ import sys
 import subprocess
 import time
 import os
+import urllib.parse
 import tempfile
 from send2trash import send2trash
 
@@ -12,7 +13,7 @@ if len(sys.argv) < 2:
 filepath = sys.argv[1]
 targetPath = tempfile.gettempdir()
 filename = os.path.basename(filepath).split("?")[0]
-videoPath = os.path.join(targetPath, filename)
+videoPath = urllib.parse.unquote(os.path.join(targetPath, filename))
 
 ariaProcess = subprocess.Popen(
     ["aria2c", "-x 8", "--file-allocation=none", "--continue=true", "--stream-piece-selector=inorder", "--dir=" + targetPath, filepath],
@@ -40,4 +41,3 @@ while True:
         sys.exit(0)
     else:
         print("Please enter 'y' or 'n'.")
-
