@@ -5,6 +5,6 @@ Very simple Python script for personal usage :
  - Opens it with VLC.
 
 ## TODO List
- - [ ] GUI to enter video URL
+ - [x] Enter video URL from both argv and input
  - [ ] Get Subtitles from Subliminal
  - [ ] Browse via SFTP and select video with a UI
