@@ -1,0 +1,1 @@
+"C:\Python34\python.exe" faststream.py %1
