@@ -6,6 +6,8 @@ import urllib.parse
 
 import tempfile
 from send2trash import send2trash
+from babelfish import Language
+from subliminal import *
 
 def main(argv):
     while True:
@@ -25,6 +27,25 @@ def main(argv):
         ["aria2c", "-x 8", "--file-allocation=none", "--continue=true", "--stream-piece-selector=inorder", "--dir=" + targetPath, filePath],
         stdout=sys.stdout,
         stderr=sys.stderr)
+
+    subliminalProcess = subprocess.Popen(
+        ["subliminal", "download", "-l", "en", "-s", videoPath],
+        stdout=sys.stdout,
+        stderr=sys.stderr)
+
+    """
+    region.configure('dogpile.cache.dbm', arguments={'filename': 'cachefile.dbm'})
+    video = scan_video(videoPath)
+    print(video.video_codec)
+    print(video.release_group)
+    subtitles = download_best_subtitles([video], {Language('eng')})
+    if len(subtitles) > 0:
+        print("A subtitle has been found!")
+        save_subtitles(video, subtitles[video])
+    else:
+        print("No subtitles found.")
+    """
+
 
     # Let it load a bit
     time.sleep(5)
