@@ -6,5 +6,5 @@ Very simple Python script for personal usage :
 
 ## TODO List
  - [x] Enter video URL from both argv and input
- - [X] Get Subtitles from Subliminal
- - [ ] Browse via SFTP and select video with a UI
+ - [x] Get Subtitles from Subliminal
+ - [x] Browse via SFTP and select video with a UI
