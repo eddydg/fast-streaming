@@ -1,7 +1,8 @@
 [DEFAULT]
-sftpURL     =  localhost
-sftpUser    =  admin
-sftpPass    =  admin
-sftpPort    =  21
-sftpFolder  =  videos/
+directURL   = localhost
+sftpURL     = localhost
+sftpUser    = admin
+sftpPass    = admin
+sftpPort    = 21
+sftpFolder  = videos/
 wantedFiles = .mkv,.avi
