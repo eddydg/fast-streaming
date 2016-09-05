@@ -21,20 +21,18 @@ sftpPort   = int(config['sftpPort'])
 sftpFolder = config['sftpFolder']
 
 wantedFiles = [e.strip() for e in config['wantedFiles'].split(',')]
-path = 'torrents/' + sftpFolder
 
 def isDir(fullPath):
     statResult = ftp.lstat(fullPath)
     return stat.S_ISDIR(statResult.st_mode)
 
 ssh = paramiko.SSHClient()
+
 # automatically add keys without requiring human intervention
 ssh.set_missing_host_key_policy( paramiko.AutoAddPolicy() )
 
 ssh.connect(sftpURL, username=sftpUser, password=sftpPass, port=sftpPort)
-
 ftp = ssh.open_sftp()
-files = ftp.listdir('torrents/' + sftpFolder)
 
 
 class FileManager():
@@ -47,8 +45,9 @@ class FileManager():
 
         for item in items:
             filename, fileextension = os.path.splitext(item)
-            if isDir(item) or fileextension in wantedFiles:
-                result.append(item)
+            fullPath = self.getCurrentPath(item)
+            if isDir(fullPath) or fileextension in wantedFiles:
+                result += [item]
 
         return result
 
@@ -65,12 +64,9 @@ class FileManager():
 
         if isDir(fullPath):
             self.path += [itemName]
-            print("Entering dir")
-            return False
+            return None
         else:
-            print(cakeBase + '/'.join(self.path[1:]) + '/' + itemName)
-            print("Starting script")
-            return True
+            return cakeBase + '/'.join(self.path[1:]) + '/' + itemName
 
     def up(self):
         if (len(self.path) > 0):
@@ -80,24 +76,25 @@ class FileManager():
 
     def getItems(self):
         files = ftp.listdir(self.getCurrentPath())
+        print("from: " + str(type(files[0])))
         files = self.filterExtension(files)
+        print("to: " + str(type(files[0])))
         sortedFiles = sorted([self.getCurrentPath(file) for file in files], key=isDir, reverse=True)
         return sortedFiles
 
+def browser():
+    fileManager = FileManager()
 
-fileManager = FileManager()
+    while True:
+        items = fileManager.getItems()
+        itemsName = [os.path.basename(str(x)) for x in items]
+        selectedItem, selectedIndex = pick(itemsName, "choisissez une fichier a stream")
 
-while True:
-    print(fileManager.getCurrentPath())
-    items = fileManager.getItems()
-    itemsName = [os.path.basename(str(x)) for x in items]
-    selectedItem, selectedIndex = pick(itemsName, "choisissez une fichier a stream")
+        selected = fileManager.select(items[selectedIndex])
 
-    isOver = fileManager.select(items[selectedIndex])
-
-    if isOver:
-        input()
-        sys.exit()
+        if selected:
+            return selected
 
 
 
+print(browser())
