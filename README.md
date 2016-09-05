@@ -1,7 +1,9 @@
 # fast-streaming
 Very simple Python script for personal usage :
- - Downloads a video file with aria2c with multiple connections at the same time to bypass some possible speed limit,
+ - Select video via sftp (or provide directly an URL/Torrent/Magnet/...)
+ - Downloads it with aria2c with multiple connections at the same time to bypass some possible speed limit,
  - Starts to download blocks from the begining to start streaming right away,
+ - Download subtitles
  - Opens it with VLC.
 
 ## TODO List
