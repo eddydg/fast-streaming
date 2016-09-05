@@ -4,6 +4,10 @@ import paramiko
 import stat
 import configparser
 from pick import pick
+from urllib import parse
+
+import faststream
+
 
 configp = configparser.ConfigParser()
 if configp.read('config.ini'):
@@ -75,9 +79,7 @@ class FileManager():
 
     def getItems(self):
         files = ftp.listdir(self.getCurrentPath())
-        print("from: " + str(type(files[0])))
         files = self.filterExtension(files)
-        print("to: " + str(type(files[0])))
         sortedFiles = sorted(files, key=self.isDir, reverse=True)
         return sortedFiles
 
@@ -95,5 +97,6 @@ def browser():
             return selected
 
 
-
-print(browser())
+url = browser()
+print(url)
+faststream.main(url)

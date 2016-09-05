@@ -9,16 +9,7 @@ from send2trash import send2trash
 from babelfish import Language
 from subliminal import *
 
-def main(argv):
-    while True:
-        if len(argv) < 2:
-            filePath = input("Enter video URL/Torrent/Magnet: ")
-        else:
-            filePath = argv[1]
-
-        if filePath:
-                break
-
+def main(filePath):
     targetPath = tempfile.gettempdir()
     filename = os.path.basename(filePath).split("?")[0]
     videoPath = urllib.parse.unquote(os.path.join(targetPath, filename))
@@ -69,4 +60,11 @@ def main(argv):
             print("Please enter 'y' or 'n'.")
 
 if __name__ == "__main__":
-    main(sys.argv)
+    while True:
+        if len(sys.argv) < 2:
+            filePath = input("Enter video URL/Torrent/Magnet: ")
+        else:
+            filePath = sys.argv[1]
+
+        if filePath:
+            main(filePath)
