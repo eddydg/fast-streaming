@@ -36,17 +36,21 @@ ssh.connect(sftpURL, username=sftpUser, password=sftpPass, port=sftpPort)
 ftp = ssh.open_sftp()
 files = ftp.listdir('torrents/' + sftpFolder)
 
-"""
-for file in files:
-    filename, fileextension = os.path.splitext(file)
-    if fileextension in wantedFiles:
-        print(cakeBase + sftpFolder + file)
-"""
 
 class FileManager():
 
     def __init__(self):
         self.path = ['torrents', 'series']
+
+    def filterExtension(self, items):
+        result = []
+
+        for item in items:
+            filename, fileextension = os.path.splitext(item)
+            if isDir(item) or fileextension in wantedFiles:
+                result.append(item)
+
+        return result
 
     def getCurrentPath(self, file=None):
         if file is None:
@@ -76,6 +80,7 @@ class FileManager():
 
     def getItems(self):
         files = ftp.listdir(self.getCurrentPath())
+        files = self.filterExtension(files)
         sortedFiles = sorted([self.getCurrentPath(file) for file in files], key=isDir, reverse=True)
         return sortedFiles
 
