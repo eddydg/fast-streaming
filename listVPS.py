@@ -22,10 +22,6 @@ sftpFolder = config['sftpFolder']
 
 wantedFiles = [e.strip() for e in config['wantedFiles'].split(',')]
 
-def isDir(fullPath):
-    statResult = ftp.lstat(fullPath)
-    return stat.S_ISDIR(statResult.st_mode)
-
 ssh = paramiko.SSHClient()
 
 # automatically add keys without requiring human intervention
@@ -40,13 +36,17 @@ class FileManager():
     def __init__(self):
         self.path = ['torrents', 'series']
 
+    def isDir(self, filename):
+        fullPath = self.getCurrentPath(filename)
+        statResult = ftp.lstat(fullPath)
+        return stat.S_ISDIR(statResult.st_mode)
+
     def filterExtension(self, items):
         result = []
 
         for item in items:
             filename, fileextension = os.path.splitext(item)
-            fullPath = self.getCurrentPath(item)
-            if isDir(fullPath) or fileextension in wantedFiles:
+            if self.isDir(item) or fileextension in wantedFiles:
                 result += [item]
 
         return result
@@ -60,9 +60,8 @@ class FileManager():
 
     def select(self, selectedItem):
         itemName = os.path.basename(str(selectedItem))
-        fullPath = self.getCurrentPath(itemName)
 
-        if isDir(fullPath):
+        if self.isDir(itemName):
             self.path += [itemName]
             return None
         else:
@@ -79,7 +78,7 @@ class FileManager():
         print("from: " + str(type(files[0])))
         files = self.filterExtension(files)
         print("to: " + str(type(files[0])))
-        sortedFiles = sorted([self.getCurrentPath(file) for file in files], key=isDir, reverse=True)
+        sortedFiles = sorted(files, key=self.isDir, reverse=True)
         return sortedFiles
 
 def browser():
