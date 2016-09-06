@@ -3,7 +3,7 @@ import sys
 import paramiko
 import stat
 import configparser
-from pick import pick
+from pick import Picker
 from urllib import parse
 
 import faststream
@@ -92,7 +92,9 @@ def browser():
 
         itemsName = [os.path.basename(str(x)) for x in items]
         choices = [".."] + itemsName
-        selectedItem, selectedIndex = pick(choices, fileManager.getCurrentPath())
+        picker = Picker(choices, fileManager.getCurrentPath() + " ('q' to quit)")
+        picker.register_custom_handler(ord('q'), sys.exit)
+        selectedItem, selectedIndex = picker.start()
 
         if selectedIndex == 0:
             fileManager.goUp()
