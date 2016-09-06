@@ -71,11 +71,12 @@ class FileManager():
         else:
             return cakeBase + '/'.join(self.path[1:]) + '/' + itemName
 
-    def up(self):
-        if (len(self.path) > 0):
+    def goUp(self):
+        if (len(self.path) > 1):
             self.path.pop()
+            return True
         else:
-            print("Cannot go upper!")
+            return False
 
     def getItems(self):
         files = ftp.listdir(self.getCurrentPath())
@@ -88,15 +89,21 @@ def browser():
 
     while True:
         items = fileManager.getItems()
-        itemsName = [os.path.basename(str(x)) for x in items]
-        selectedItem, selectedIndex = pick(itemsName, "choisissez une fichier a stream")
 
-        selected = fileManager.select(items[selectedIndex])
+        itemsName = [os.path.basename(str(x)) for x in items]
+        choices = [".."] + itemsName
+        selectedItem, selectedIndex = pick(choices, fileManager.getCurrentPath())
+
+        if selectedIndex == 0:
+            fileManager.goUp()
+            continue
+
+        # - 1 for added ".." choice
+        selected = fileManager.select(items[selectedIndex - 1])
 
         if selected:
             return selected
 
 
 url = browser()
-print(url)
 faststream.main(url)
