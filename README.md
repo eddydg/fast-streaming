@@ -10,3 +10,7 @@ Very simple Python script for personal usage :
  - [x] Enter video URL from both argv and input
  - [x] Get Subtitles from Subliminal
  - [x] Browse via SFTP and select video with a UI
+ - [] Option to delete the file (instead of putting in trash bin)
+ - [] Sort by name
+ - [] Show files sizes
+ - [] Shortcuts to sort by name/size
