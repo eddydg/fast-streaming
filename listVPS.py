@@ -79,10 +79,22 @@ class FileManager():
             return False
 
     def getItems(self):
-        files = ftp.listdir(self.getCurrentPath())
-        files = self.filterExtension(files)
-        sortedFiles = sorted(files, key=self.isDir, reverse=True)
-        return sortedFiles
+        items = ftp.listdir(self.getCurrentPath())
+        items = self.filterExtension(items)
+
+        files = []
+        folders = []
+
+        for item in items:
+            if (self.isDir(item)):
+                folders += [item]
+            else:
+                files += [item]
+
+        files = sorted(files)
+        folders = sorted(folders)
+
+        return folders + files
 
 def browser():
     fileManager = FileManager()
