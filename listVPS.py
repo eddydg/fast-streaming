@@ -102,7 +102,16 @@ def browser():
     while True:
         items = fileManager.getItems()
 
-        itemsName = [os.path.basename(str(x)) for x in items]
+        itemsName = []
+        for item in items:
+
+            if fileManager.isDir(item):
+                itemsName += [os.path.basename(str(item)) + "/"]
+            else:
+                raw_size = ftp.stat(fileManager.getCurrentPath(item)).st_size
+                size = str(round(raw_size / 1024 / 1024)) # Bytes to Megabytes
+                itemsName += [os.path.basename(str(item)) + " [" + size + " Mo]"]
+
         choices = [".."] + itemsName
         picker = Picker(choices, fileManager.getCurrentPath() + " ('q' to quit)")
         picker.register_custom_handler(ord('q'), sys.exit)
