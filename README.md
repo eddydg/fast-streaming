@@ -6,6 +6,12 @@ Very simple Python script for personal usage :
  - Download subtitles
  - Opens it with VLC.
 
+# Dependecies
+paramiko, configparser, Picker
+`pip install -r requirements.txt`
+
+Also to use the module Pick you will need ncurses
+
 ## TODO List
  - [x] Enter video URL from both argv and input
  - [x] Get Subtitles from Subliminal
