@@ -78,7 +78,7 @@ class FileManager():
         else:
             return False
 
-    def getItems(self):
+    def getItems(self, func = None):
         items = ftp.listdir(self.getCurrentPath())
         items = self.filterExtension(items)
 
@@ -91,16 +91,30 @@ class FileManager():
             else:
                 files += [item]
 
-        files = sorted(files)
+        if func is not None:
+        	fiels = sorted(files, key=func)
+        else:
+        	files = sorted(files)
         folders = sorted(folders)
 
         return folders + files
 
-def browser():
-    fileManager = FileManager()
+fileManager = FileManager()
+orderBy = None
+def switchOrderBy(test):
+	global orderBy
 
+	if orderBy is None:
+		orderBy = lambda x: ftp.stat(fileManager.getCurrentPath(x)).st_size
+	else:
+		orderBy = None
+
+	return None, -1
+
+def browser():
+    global orderBy
     while True:
-        items = fileManager.getItems()
+        items = fileManager.getItems(orderBy)
 
         itemsName = []
         for item in items:
@@ -115,7 +129,12 @@ def browser():
         choices = [".."] + itemsName
         picker = Picker(choices, fileManager.getCurrentPath() + " ('q' to quit)")
         picker.register_custom_handler(ord('q'), sys.exit)
+        picker.register_custom_handler(ord('o'), switchOrderBy)
+
         selectedItem, selectedIndex = picker.start()
+
+        if selectedItem is None:
+        	continue
 
         if selectedIndex == 0:
             fileManager.goUp()
