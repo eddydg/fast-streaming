@@ -7,10 +7,15 @@ Very simple Python script for personal usage :
  - Opens it with VLC.
 
 # Dependecies
-paramiko, configparser, Picker
+paramiko, configparser, Picker, send2trash
 `pip install -r requirements.txt`
 
 Also to use the module Pick you will need ncurses
+(http://www.lfd.uci.edu/~gohlke/pythonlibs/#curses)
+`pip install curses-*.whl`
+
+# Configuration
+Rename the "config.ini.example" to "config.ini" and replace with your own data.
 
 ## TODO List
  - [x] Enter video URL from both argv and input
