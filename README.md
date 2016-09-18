@@ -24,7 +24,7 @@ Rename the "config.ini.example" to "config.ini" and replace with your own data.
  - [x] Sort by name
  - [x] Show files sizes
  - [x] Select manually (by id) or with Picker
- - [ ] Option to delete the file (instead of putting in trash bin)
+ - [x] Option to delete the file (instead of putting in trash bin)
  - [ ] Shortcuts to sort by name/size
  - [ ] Test user's connection speed
  - [ ] Estimate how long it will take to complete download
