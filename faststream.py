@@ -49,15 +49,18 @@ def main(filePath):
     ariaProcess.terminate()
 
     while True:
-        res = input("Do you want to move the video to the trash? (default 'y') [y/n] ")
+        res = input("Move the video to the (t)rash, (d)elete or do (n)othing? (default 't') [t/d/n] ")
 
-        if (res == "y" or res == ""):
+        if (res == "t" or res == ""):
             send2trash(videoPath)
             sys.exit(0)
         elif (res == "n"):
             sys.exit(0)
+        elif (res == "d"):
+            os.remove(videoPath)
+            sys.exit(0)
         else:
-            print("Please enter 'y' or 'n'.")
+            print("Please enter 't', 'd' or 'n'.")
 
 if __name__ == "__main__":
     while True:

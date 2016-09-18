@@ -18,7 +18,7 @@ Also to use the module Pick you will need ncurses
  - [x] Browse via SFTP and select video with a UI
  - [x] Sort by name
  - [x] Show files sizes
- - [ ] Option to delete the file (instead of putting in trash bin)
+ - [x] Option to delete the file (instead of putting in trash bin)
  - [ ] Shortcuts to sort by name/size
  - [ ] Test user's connection speed
  - [ ] Estimate how long it will take to complete download
