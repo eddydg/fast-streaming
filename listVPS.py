@@ -5,6 +5,7 @@ import stat
 import configparser
 from pick import Picker
 from urllib import parse
+from enum import Enum
 
 import faststream
 
@@ -99,22 +100,59 @@ class FileManager():
 
         return folders + files
 
+class SelectionType(Enum):
+    Manual = 1
+    Picker = 2
+
+class FileSelection():
+
+    def __init__(self, fileManager, orderBy=None, selectionType=SelectionType.Picker):
+        self.orderBy = orderBy
+        self.selectionType = selectionType
+        self.fileManager = fileManager
+
+    def switchOrderBy(self, test):
+        if self.orderBy is None:
+            self.orderBy = lambda x: ftp.stat(self.fileManager.getCurrentPath(x)).st_size
+        else:
+            self.orderBy = None
+
+        return None, -1
+
+    def askSelection(self, choices):
+        selectedItem, selectedIndex = ("", -1)
+        currentPath = self.fileManager.getCurrentPath()
+
+        if self.selectionType is SelectionType.Picker:
+            picker = Picker(choices, currentPath + " ('q' to quit)")
+            picker.register_custom_handler(ord('q'), sys.exit)
+            picker.register_custom_handler(ord('o'), self.switchOrderBy)
+
+            selectedItem, selectedIndex = picker.start()
+
+        else:
+            while True:
+                print(currentPath + " ('q' to quit)")
+                for i, choice in enumerate(choices):
+                    print("["+str(i)+"] " + choice)
+                try:
+                    selectedIndex = int(input("Select your choice between 0-" + str(len(choices)-1) + ": "))
+                    if selectedIndex < 0 or selectedIndex >= len(choices):
+                        print("Invalid choice. Must be between 0-" + str(len(choices)-1) + ".")
+                    else:
+                        break
+                except ValueError:
+                    print("Please enter a number.")
+
+        return selectedItem, selectedIndex
+
+
 fileManager = FileManager()
-orderBy = None
-def switchOrderBy(test):
-	global orderBy
-
-	if orderBy is None:
-		orderBy = lambda x: ftp.stat(fileManager.getCurrentPath(x)).st_size
-	else:
-		orderBy = None
-
-	return None, -1
+fileSelection = FileSelection(fileManager)
 
 def browser():
-    global orderBy
     while True:
-        items = fileManager.getItems(orderBy)
+        items = fileManager.getItems(fileSelection.orderBy)
 
         itemsName = []
         for item in items:
@@ -127,11 +165,7 @@ def browser():
                 itemsName += [os.path.basename(str(item)) + " [" + size + " Mo]"]
 
         choices = [".."] + itemsName
-        picker = Picker(choices, fileManager.getCurrentPath() + " ('q' to quit)")
-        picker.register_custom_handler(ord('q'), sys.exit)
-        picker.register_custom_handler(ord('o'), switchOrderBy)
-
-        selectedItem, selectedIndex = picker.start()
+        selectedItem, selectedIndex = fileSelection.askSelection(choices)
 
         if selectedItem is None:
         	continue
