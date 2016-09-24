@@ -1,3 +1,4 @@
 paramik
 configparser
 pick
+send2trash

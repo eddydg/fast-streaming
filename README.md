@@ -7,10 +7,15 @@ Very simple Python script for personal usage :
  - Opens it with VLC.
 
 # Dependecies
-paramiko, configparser, Picker
+paramiko, configparser, Picker, send2trash
 `pip install -r requirements.txt`
 
 Also to use the module Pick you will need ncurses
+(http://www.lfd.uci.edu/~gohlke/pythonlibs/#curses)
+`pip install curses-*.whl`
+
+# Configuration
+Rename the "config.ini.example" to "config.ini" and replace with your own data.
 
 ## TODO List
  - [x] Enter video URL from both argv and input
@@ -18,7 +23,7 @@ Also to use the module Pick you will need ncurses
  - [x] Browse via SFTP and select video with a UI
  - [x] Sort by name
  - [x] Show files sizes
- - [x] Option to delete the file (instead of putting in trash bin)
+ - [x] Select manually (by id) or with Picker
  - [ ] Shortcuts to sort by name/size
  - [ ] Test user's connection speed
  - [ ] Estimate how long it will take to complete download
