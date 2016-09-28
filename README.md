@@ -6,7 +6,7 @@ Very simple Python script for personal usage :
  - Download subtitles
  - Opens it with VLC.
 
-# Dependecies
+# Dependencies
 paramiko, configparser, Picker, send2trash
 `pip install -r requirements.txt`
 
@@ -25,6 +25,6 @@ Rename the "config.ini.example" to "config.ini" and replace with your own data.
  - [x] Show files sizes
  - [x] Select manually (by id) or with Picker
  - [x] Option to delete the file (instead of putting in trash bin)
- - [ ] Shortcuts to sort by name/size
+ - [x] Shortcuts to sort by name/size
  - [ ] Test user's connection speed
  - [ ] Estimate how long it will take to complete download
