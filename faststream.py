@@ -52,9 +52,9 @@ def main(filePath):
 
 
     if hasFoundSubtitle and os.path.exists(subtitlePath):
-        vlcProcess = subprocess.Popen(["vlc", "--sub-file=" + subtitlePath, videoPath])
+        vlcProcess = subprocess.Popen(["vlc", "--fullscreen", "--sub-file=" + subtitlePath, videoPath])
     else:
-        vlcProcess = subprocess.Popen(["vlc", videoPath])
+        vlcProcess = subprocess.Popen(["vlc", "--fullscreen", videoPath])
 
     vlcProcess.wait()
     print("VLC process finished.")
