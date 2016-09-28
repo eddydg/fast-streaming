@@ -20,8 +20,14 @@ def main(filePath):
         stdout=sys.stdout,
         stderr=sys.stderr)
 
-    time.sleep(2)
+    # Wait for the video to be created
+    while not os.path.exists(videoPath):
+        time.sleep(1)
 
+    time.sleep(1)
+
+
+    # Quick and simple subtitle download without checking its format
     """
     subliminalProcess = subprocess.Popen(
         ["subliminal", "download", "-l", "en", "-s", videoPath],
@@ -31,21 +37,24 @@ def main(filePath):
 
     region.configure('dogpile.cache.dbm', arguments={'filename': 'cachefile.dbm'})
     video = scan_video(videoPath)
-    print(video.video_codec)
-    print(video.release_group)
+    print("Video info - Codec: " + video.video_codec + " - Release: " + video.release_group)
     subtitles = download_best_subtitles([video], {Language(languages[0])})
+
+    hasFoundSubtitle = False
     if len(subtitles) > 0:
         print("A subtitle has been found!")
+        hasFoundSubtitle = True
         save_subtitles(video, subtitles[video])
     else:
         print("No subtitles found.")
 
-    subtitle_path = os.path.splitext(videoPath)[0] + "." + languages[0][:2] + ".srt"
+    subtitlePath = os.path.splitext(videoPath)[0] + "." + languages[0][:2] + ".srt"
 
-    # Let it load a bit
-    time.sleep(5)
 
-    vlcProcess = subprocess.Popen(["vlc", "--sub-file=" + subtitle_path, videoPath])
+    if hasFoundSubtitle and os.path.exists(subtitlePath):
+        vlcProcess = subprocess.Popen(["vlc", "--sub-file=" + subtitlePath, videoPath])
+    else:
+        vlcProcess = subprocess.Popen(["vlc", videoPath])
 
     vlcProcess.wait()
     print("VLC process finished.")
@@ -57,11 +66,15 @@ def main(filePath):
 
         if (res == "t"):
             send2trash(videoPath)
+            if os.path.exists(subtitlePath):
+                send2trash(subtitlePath)
             sys.exit(0)
         elif (res == "n"):
             sys.exit(0)
         elif (res == "d" or res == ""):
             os.remove(videoPath)
+            if os.path.exists(subtitlePath):
+                send2trash(subtitlePath)
             sys.exit(0)
         else:
             print("Please enter 't', 'd' or 'n'.")
