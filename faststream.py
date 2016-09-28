@@ -37,7 +37,6 @@ def main(filePath):
 
     region.configure('dogpile.cache.dbm', arguments={'filename': 'cachefile.dbm'})
     video = scan_video(videoPath)
-    print("Video info - Codec: " + video.video_codec + " - Release: " + video.release_group)
     subtitles = download_best_subtitles([video], {Language(languages[0])})
 
     hasFoundSubtitle = False
