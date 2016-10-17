@@ -182,4 +182,4 @@ def browser():
 
 
 url = browser()
-faststream.main(url, config)
+fastStreamRet = faststream.main(url, config)

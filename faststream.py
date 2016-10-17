@@ -3,6 +3,8 @@ import subprocess
 import time
 import os
 import urllib.parse
+import time
+import math
 
 import tempfile
 from send2trash import send2trash
@@ -14,6 +16,7 @@ def main(filePath, config):
     filename = os.path.basename(filePath).split("?")[0]
     videoPath = urllib.parse.unquote(os.path.join(targetPath, filename))
     languages = ["eng"]
+    downloadBufferTime = 10 # In seconds
 
     ariaProcess = subprocess.Popen(
         ["aria2c", "-x 8", "--file-allocation=none", "--continue=true", "--stream-piece-selector=inorder", "--dir=" + targetPath, filePath],
@@ -23,7 +26,7 @@ def main(filePath, config):
     # Wait for the video to be created
     while not os.path.exists(videoPath):
         time.sleep(1)
-
+    startDownloadingVideoTime = time.time()
     time.sleep(1)
 
 
@@ -48,6 +51,13 @@ def main(filePath, config):
         print("No subtitles found.")
 
     subtitlePath = os.path.splitext(videoPath)[0] + "." + languages[0][:2] + ".srt"
+
+    elapsedDownloadTime = time.time() - startDownloadingVideoTime
+    while elapsedDownloadTime < downloadBufferTime:
+        remainingTime = math.floor(downloadBufferTime - elapsedDownloadTime)
+        print("Waiting {} seconds.".format(str(remainingTime)))
+        time.sleep(1)
+        elapsedDownloadTime = time.time() - startDownloadingVideoTime
 
 
     if hasFoundSubtitle and os.path.exists(subtitlePath):
