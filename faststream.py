@@ -9,7 +9,7 @@ from send2trash import send2trash
 from babelfish import Language
 from subliminal import *
 
-def main(filePath):
+def main(filePath, config):
     targetPath = tempfile.gettempdir()
     filename = os.path.basename(filePath).split("?")[0]
     videoPath = urllib.parse.unquote(os.path.join(targetPath, filename))
@@ -60,6 +60,12 @@ def main(filePath):
     print("Terminating aria2c.")
     ariaProcess.terminate()
 
+    if config['alwaysDeleteCache'] == 'True':
+        os.remove(videoPath)
+        if os.path.exists(subtitlePath):
+            os.remove(subtitlePath)
+        return 0
+
     while True:
         res = input("Move the video to the (t)rash, (d)elete or do (n)othing? (default 'd') [t/d/n] ")
 
@@ -67,14 +73,14 @@ def main(filePath):
             send2trash(videoPath)
             if os.path.exists(subtitlePath):
                 send2trash(subtitlePath)
-            sys.exit(0)
+            return 0
         elif (res == "n"):
-            sys.exit(0)
+            return 0
         elif (res == "d" or res == ""):
             os.remove(videoPath)
             if os.path.exists(subtitlePath):
-                send2trash(subtitlePath)
-            sys.exit(0)
+                os.remove(subtitlePath)
+            return 0
         else:
             print("Please enter 't', 'd' or 'n'.")
 

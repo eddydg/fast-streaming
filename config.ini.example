@@ -6,3 +6,5 @@ sftpPass    = admin
 sftpPort    = 21
 sftpFolder  = videos/
 wantedFiles = .mkv,.avi,.mp4
+
+alwaysDeleteCache = True
