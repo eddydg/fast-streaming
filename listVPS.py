@@ -72,6 +72,19 @@ class FileManager():
         else:
             return cakeBase + '/'.join(self.path[1:]) + '/' + itemName
 
+    def remove(self, filePath):
+        try:
+            ftp.stat(filePath)
+        except IOError as e:
+            if e.errno == errno.ENOENT:
+                print('Could not delete {}. File does not exist.'.format(filePath))
+            else:
+                print(str(e))
+            return False
+        else:
+            ftp.remove(filePath)
+            return True
+
     def goUp(self):
         if (len(self.path) > 1):
             self.path.pop()
@@ -178,8 +191,19 @@ def browser():
         selected = fileManager.select(items[selectedIndex - 1])
 
         if selected:
-            return selected
+            return selected, items[selectedIndex - 1]
 
 
-url = browser()
+url, fileName = browser()
 fastStreamRet = faststream.main(url, config)
+
+while True:
+    res = input("Delete file server-side? (default 'n') [y/n] ")
+
+    if (res == "y"):
+        removeRet = fileManager.remove(fileManager.getCurrentPath(fileName))
+        sys.exit(0)
+    elif (res == "n" or res == ""):
+        sys.exit(0)
+    else:
+        print("Please enter 'y' or 'n'.")
