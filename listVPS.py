@@ -201,7 +201,10 @@ while True:
     res = input("Delete file server-side? (default 'n') [y/n] ")
 
     if (res == "y"):
-        removeRet = fileManager.remove(fileManager.getCurrentPath(fileName))
+        removeVideoRet = fileManager.remove(fileManager.getCurrentPath(fileName))
+        if removeVideoRet:
+            subName = os.path.splitext(fileName)[0] + '.srt'
+            removeSubRet = fileManager.remove(fileManager.getCurrentPath(subName))
         sys.exit(0)
     elif (res == "n" or res == ""):
         sys.exit(0)
