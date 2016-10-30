@@ -26,6 +26,7 @@ sftpPort   = int(config['sftpPort'])
 sftpFolder = config['sftpFolder']
 
 wantedFiles = [e.strip() for e in config['wantedFiles'].split(',')]
+unwantedFolders = ['_gsdata_', 'incoming']
 
 ssh = paramiko.SSHClient()
 
@@ -51,7 +52,7 @@ class FileManager():
 
         for item in items:
             filename, fileextension = os.path.splitext(item)
-            if self.isDir(item) or fileextension in wantedFiles:
+            if fileextension in wantedFiles:
                 result += [item]
 
         return result
@@ -94,19 +95,24 @@ class FileManager():
 
     def getItems(self, func = None):
         items = ftp.listdir(self.getCurrentPath())
-        items = self.filterExtension(items)
 
         files = []
         folders = []
-
         for item in items:
-            if (self.isDir(item)):
-                folders += [item]
+            if self.isDir(item) and item not in unwantedFolders:
+                dirFiles = ftp.listdir(self.getCurrentPath(item))
+                dirFilesPath = [self.getCurrentPath(item + '/' + x) for x in dirFiles]
+                dirFiles = self.filterExtension(dirFilesPath)
+
+                if len(dirFiles) > 0 or len(self.path) == 1: # Show folders in root folder
+                    folders += [item]
             else:
-                files += [item]
+                filename, fileextension = os.path.splitext(item)
+                if fileextension in wantedFiles:
+                    files += [item]
 
         if func is not None:
-        	fiels = sorted(files, key=func)
+        	files = sorted(files, key=func)
         else:
         	files = sorted(files)
         folders = sorted(folders)

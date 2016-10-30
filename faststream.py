@@ -16,7 +16,7 @@ def main(filePath, config):
     filename = os.path.basename(filePath).split("?")[0]
     videoPath = urllib.parse.unquote(os.path.join(targetPath, filename))
     languages = ["eng"]
-    downloadBufferTime = 10 # In seconds
+    downloadBufferTime = 5 # In seconds
 
     ariaProcess = subprocess.Popen(
         ["aria2c", "-x 8", "--file-allocation=none", "--continue=true", "--stream-piece-selector=inorder", "--dir=" + targetPath, filePath],
