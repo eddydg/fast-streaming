@@ -101,9 +101,11 @@ class FileManager():
         for item in items:
             if self.isDir(item) and item not in unwantedFolders:
                 dirFiles = ftp.listdir(self.getCurrentPath(item))
-                dirFilesPath = [self.getCurrentPath(item + '/' + x) for x in dirFiles]
-                dirFiles = self.filterExtension(dirFilesPath)
+                if any(self.isDir(item + '/' + x) for x in dirFiles): # Show if has subfolders
+                    folders += [item]
+                    continue
 
+                dirFiles = self.filterExtension(dirFiles)
                 if len(dirFiles) > 0 or len(self.path) == 1: # Show folders in root folder
                     folders += [item]
             else:
