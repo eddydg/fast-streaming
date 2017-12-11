@@ -5,13 +5,21 @@ import os
 import urllib.parse
 import time
 import math
+import configparser
 
 import tempfile
 from send2trash import send2trash
 from babelfish import Language
 from subliminal import *
 
-def main(filePath, config):
+configp = configparser.ConfigParser()
+if configp.read('config.ini'):
+    config = configp['DEFAULT']
+else:
+    print("config file not found")
+    sys.exit()
+
+def main(filePath):
     targetPath = tempfile.gettempdir()
     filename = os.path.basename(filePath).split("?")[0]
     videoPath = urllib.parse.unquote(os.path.join(targetPath, filename))

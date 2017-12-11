@@ -1,9 +1,10 @@
 [DEFAULT]
-directURL   = localhost
-sftpURL     = localhost
+directURL   = https://files.example.com/
+sftpURL     = example.com
 sftpUser    = admin
 sftpPass    = admin
-sftpPort    = 21
+sftpPrivateKeyPath = C:/Users/Username/.ssh/id_rsa
+sftpPort    = 22
 sftpFolder  = videos/
 wantedFiles = .mkv,.avi,.mp4
 

@@ -1,6 +1,7 @@
 import os
 import sys
 import paramiko
+import time
 import stat
 import configparser
 from pick import Picker
@@ -22,25 +23,25 @@ cakeBase   = config['directURL']
 sftpURL    = config['sftpURL']
 sftpUser   = config['sftpUser']
 sftpPass   = config['sftpPass']
+sftpPrivateKeyPath   = config['sftpPrivateKeyPath']
 sftpPort   = int(config['sftpPort'])
 sftpFolder = config['sftpFolder']
 
 wantedFiles = [e.strip() for e in config['wantedFiles'].split(',')]
-unwantedFolders = ['_gsdata_', 'incoming']
+unwantedFolders = ['_gsdata_']
 
 ssh = paramiko.SSHClient()
 
 # automatically add keys without requiring human intervention
-ssh.set_missing_host_key_policy( paramiko.AutoAddPolicy() )
+ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-ssh.connect(sftpURL, username=sftpUser, password=sftpPass, port=sftpPort)
+ssh.connect(sftpURL, username=sftpUser, password=sftpPass, port=sftpPort, key_filename='C:/Users/Eddydg/.ssh/id_rsa')
 ftp = ssh.open_sftp()
-
 
 class FileManager():
 
     def __init__(self):
-        self.path = ['torrents', 'series']
+        self.path = ['files', 'tvshows']
 
     def isDir(self, filename):
         fullPath = self.getCurrentPath(filename)
@@ -59,7 +60,7 @@ class FileManager():
 
     def getCurrentPath(self, file=None):
         if file is None:
-            return '/'.join(self.path)
+            return '/'.join(self.path) # TODO: handle case empty self.path
         else:
             fullpath = self.path + [file]
             return '/'.join(fullpath)
@@ -203,18 +204,18 @@ def browser():
 
 
 url, fileName = browser()
-fastStreamRet = faststream.main(url, config)
+fastStreamRet = faststream.main(url)
 
 while True:
     res = input("Delete file server-side? (default 'n') [y/n] ")
 
-    if (res == "y"):
+    if res == "y":
         removeVideoRet = fileManager.remove(fileManager.getCurrentPath(fileName))
         if removeVideoRet:
             subName = os.path.splitext(fileName)[0] + '.srt'
             removeSubRet = fileManager.remove(fileManager.getCurrentPath(subName))
         sys.exit(0)
-    elif (res == "n" or res == ""):
+    elif res == "n" or res == "":
         sys.exit(0)
     else:
         print("Please enter 'y' or 'n'.")
