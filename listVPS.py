@@ -35,7 +35,7 @@ ssh = paramiko.SSHClient()
 # automatically add keys without requiring human intervention
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-ssh.connect(sftpURL, username=sftpUser, password=sftpPass, port=sftpPort, key_filename='C:/Users/Eddydg/.ssh/id_rsa')
+ssh.connect(sftpURL, username=sftpUser, password=sftpPass, port=sftpPort, key_filename=sftpPrivateKeyPath)
 ftp = ssh.open_sftp()
 
 class FileManager():
